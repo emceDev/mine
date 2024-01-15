@@ -1,0 +1,40 @@
+const calculateDigTime = async (bot, blocks, dcSend) => {
+  const efficiencyMultipliers = {
+    0: 1.0,
+    1: 1.3,
+    2: 1.45,
+    3: 1.6,
+    4: 1.75,
+    5: 2.0,
+  };
+  const items = bot.inventory.items();
+  // console.log(items);
+  const block = bot.blockAt(new Vec3(blocks[0].x, blocks[0].y, blocks[0].z));
+  const hardness = block.hardness;
+  const prefTool = block.material.split("/")[1];
+  // console.log(block);
+  const tools = items.filter((item) => item.name.includes(prefTool));
+  for (const tool of tools) {
+    console.log("tool:", tool.name);
+    await equip(bot, tool.name, dcSend);
+    await wait(300);
+    let eff = 0;
+    let baseDigTime = bot.digTime(block) / 1000;
+
+    if (tool.nbt.value.Enchantments) {
+      const enchantments = tool.nbt.value.Enchantments.value.value;
+      for (const enchantment of enchantments) {
+        if (enchantment.id.value.includes("efficiency")) {
+          eff = enchantment.lvl.value;
+          //console.log(eff);
+        }
+      }
+    }
+    let z = (baseDigTime += eff ^ (2 + 1));
+    let damage = z / hardness;
+    let ticks = 1 / damage;
+    let seconds = ticks / 20;
+    // const x = hardness / (efficiencyMultipliers[eff] * baseDigTime);
+    console.log(seconds);
+  }
+};

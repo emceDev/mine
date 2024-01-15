@@ -2,7 +2,7 @@ let loop = 0;
 let blocks;
 let finalArr;
 let paused;
-const distance = 5;
+const distance = 3;
 const { Vec3 } = require("vec3");
 const {
   pathfinder,
@@ -16,7 +16,7 @@ const { tossItems } = require("./Tossing");
 const mcData = require("minecraft-data")(bot.version);
 
 const defaultStartBlock = "oak_planks";
-const defaultHarvest = "sweet_berry_bush";
+const defaultHarvest = "pumpkin";
 
 const findBlocks = async (name = defaultHarvest) => {
   console.log("findblocks", name);
@@ -141,7 +141,8 @@ function pick(arrayOfPoints) {
       setTimeout(() => {
         console.log(arrayOfPoints[iter]);
         if (bot.blockAt(arrayOfPoints[iter]).metadata !== 1) {
-          bot.activateBlock({ position: arrayOfPoints[iter] });
+          //bot.activateBlock({ position: arrayOfPoints[iter] });
+          bot.dig({ position: arrayOfPoints[iter] });
         }
       }, Math.floor(Math.random() * 3) + 1);
 
